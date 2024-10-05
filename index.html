@@ -1,20 +1,31 @@
 <html>
-	<head>
-		<meta charset=utf-8>
-		<title>Ontology-driven Orrery</title>
-		<style>
-			body { margin: 0; }
-			canvas { width: 100%; height: 100% }
-		</style>
-	</head>
-	<body>
-	    <script src="http://cdnjs.cloudflare.com/ajax/libs/jsonld/0.3.15/jsonld.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src="TrackballControls.js"></script>
-		<script src="OrbitalPropagator.js"></script>
-<!--	<script src="compacted_OrbitalOntology.jsonld"  type="application/ld+json" id="datablock"></script>  -->
-        <script id="OrbitOntology" type="application/ld+json">
+
+<head>
+  <meta charset=utf-8>
+  <title>Ontology-driven Orrery</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    body, html {height:100%;}
+    div.wrap {height:100%; overflow:hidden;}
+    body {overflow: hidden; }
+    canvas {
+      width: 100%;
+      height: 100%
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jsonld/0.3.15/jsonld.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="TrackballControls.js"></script>
+  <script src="OrbitalPropagator.js"></script>
+  <!--	<script src="compacted_OrbitalOntology.jsonld"  type="application/ld+json" id="datablock"></script>  -->
+  <script id="OrbitOntology" type="application/ld+json">
  {
   "@context": {
     "HelioCentricOrbit": "http://www.semanticweb.org/rrovetto/ontologies/2014/ssao#Helio-Centric_Orbit",
@@ -284,35 +295,74 @@
       ],
       "argPerigee": {
         "type": "decimal",
-        "value": "92.86136063"
+        "value": "172.43404441"
       },
       "sidereal": {
         "type": "decimal",
-        "value": "29.447"
+        "value": "84.011"
       },
       "meanAnomoly": {
         "type": "decimal",
-        "value": "50.07571329"
+        "value": "314.20276625"
       },
       "raan": {
         "type": "decimal",
-        "value": "113.63998702"
+        "value": "73.96250215"
       },
       "semiMajorAxis": {
         "type": "decimal",
-        "value": "9.54149883"
+        "value": "19.18797948"
       },
       "name": {
         "type": "Name",
-        "value": "Saturn_Orbit"
+        "value": "Uranus_Orbit"
       },
       "eccentricity": {
         "type": "decimal",
-        "value": "0.05550825"
+        "value": "0.04685740"
       },
       "inclination": {
         "type": "decimal",
-        "value": "2.49424102"
+        "value": "0.77298127"
+      }
+    },
+    {
+      "@id": "http://www.semanticweb.org/daoneil/ontologies/2016/7/untitled-ontology-34#Neptune_Orbit",
+      "type": [
+        "CelestialEntity",
+        "HelioCentricOrbit"
+      ],
+      "argPerigee": {
+        "type": "decimal",
+        "value": "46.68158724"
+      },
+      "sidereal": {
+        "type": "decimal",
+        "value": "164.79"
+      },
+      "meanAnomoly": {
+        "type": "decimal",
+        "value": "304.22289287"
+      },
+      "raan": {
+        "type": "decimal",
+        "value": "131.78635853"
+      },
+      "semiMajorAxis": {
+        "type": "decimal",
+        "value": "30.06952752"
+      },
+      "name": {
+        "type": "Name",
+        "value": "Uranus_Orbit"
+      },
+      "eccentricity": {
+        "type": "decimal",
+        "value": "0.00895439"
+      },
+      "inclination": {
+        "type": "decimal",
+        "value": "1.77005520"
       }
     },
     {
@@ -335,154 +385,240 @@
   ]
 }
         </script>
-		<script>
-    var camera ;
-		var controls ;         // Declare global variables
-		var scene ;
-		var cube ;
-		var sphere ;  
-		var line ;
-		var objNames = ["Earth_Orbit", "Mars_orbit", "Mercury_Orbit", "Venus_Orbit","Jupiter_Orbit","Saturn_Orbit","Uranus_Orbit"] ;
-		var objSizes = [0.2, 0.17, 0.07, 0.2,0.4,0.38,0.35] ;
-		var objColors = [0x0066FF, 0xCC3333, 0xFF0000, 0xFFFFFF,0xc99039] ;
-		var curObj = new THREE.Object3D();
-		var celestialBody ;
-		var heavenlyBodies = [] ;
-		
-		function init() {
-            camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+  <script>
+    var camera;
+    var controls;         // Declare global variables
+    var scene;
+    var cube;
+    var sphere;
+    var line;
+    var objNames = ["Earth_Orbit", "Mars_orbit", "Mercury_Orbit", "Venus_Orbit", "Jupiter_Orbit", "Saturn_Orbit", "Uranus_Orbit", "Neptune_Orbit"];
+    var objSizes = [0.2, 0.17, 0.07, 0.2, 0.4, 0.38, 0.35, 0.37];
+    var objColors = [0x0066FF, 0xCC3333, 0xFF0000, 0xFFFFFF, 0xc99039];
+    var curObj = new THREE.Object3D();
+    var celestialBody;
+    var heavenlyBodies = [];
 
-			controls = new THREE.TrackballControls( camera );
-				controls.rotateSpeed = 1.0;
-				controls.zoomSpeed = 1.2;
-				controls.panSpeed = 0.8;
-				controls.noZoom = false;
-				controls.noPan = false;
-				controls.staticMoving = true;
-				controls.dynamicDampingFactor = 0.3;
-				controls.keys = [ 65, 83, 68 ];
-				controls.addEventListener( 'change', render );
-				
-			scene = new THREE.Scene();
-								
-            renderer = new THREE.WebGLRenderer();
-            renderer.setSize( window.innerWidth/2, window.innerHeight/2);
-            document.body.appendChild( renderer.domElement );
-			
+    function init() {
+      camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-		    var j = 0 ;
-		//  Here comes the Sun!
-			var geometry = new THREE.SphereGeometry( 0.6, 16, 16 );
-			var material = new THREE.MeshBasicMaterial( {color: 0xFFFF00, wireframe: false} );
-            sphere = new THREE.Mesh( geometry, material );
-			scene.add( sphere );
-			
-			var light = new THREE.PointLight( 0xff0000, 1, 100 );
-            light.position.set( 0, 0, 0 );           
-            scene.add( light );                       // currently no effect
-			
-			for (i = 0; i < 6; i++) { // Add the inner planets.
-		
-			 geometry = new THREE.SphereGeometry( objSizes[j], 16, 16 );
-		     material = new THREE.MeshBasicMaterial( {color: objColors[j], wireframe: false} );
-             sphere = new THREE.Mesh( geometry, material );
-			 
-			 sphere.name = objNames[i] ;
-             scene.add( sphere );
-			 
-			  j = j + 1 ;
-			} 
-			camera.position.z = 5;
-			
-		//	console.log(scene) ;
-		
-		}
-		</script>
-<div></div>
-<div id="planetary_orbits"></div>
-<!-- <i>RAAN = Right Ascension of Ascending Node</i>
+      controls = new THREE.TrackballControls(camera);
+      controls.rotateSpeed = 1.0;
+      controls.zoomSpeed = 1.2;
+      controls.panSpeed = 0.8;
+      controls.noZoom = false;
+      controls.noPan = false;
+      controls.staticMoving = true;
+      controls.dynamicDampingFactor = 0.3;
+      controls.keys = [65, 83, 68];
+      controls.addEventListener('change', render);
+
+      scene = new THREE.Scene();
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+
+      var j = 0;
+      //  Here comes the Sun!
+      var geometry = new THREE.SphereGeometry(0.6, 16, 16);
+      var material = new THREE.MeshBasicMaterial({ color: 0xFFFF00, wireframe: false });
+      sphere = new THREE.Mesh(geometry, material);
+      scene.add(sphere);
+
+      var light = new THREE.PointLight(0xff0000, 1, 100);
+      light.position.set(0, 0, 0);
+      scene.add(light);                       // currently no effect
+
+      for (i = 0; i < 8; i++) { // Add the inner planets.
+
+        geometry = new THREE.SphereGeometry(objSizes[j], 16, 16);
+        material = new THREE.MeshBasicMaterial({ color: objColors[j], wireframe: false });
+        sphere = new THREE.Mesh(geometry, material);
+
+        sphere.name = objNames[i];
+        scene.add(sphere);
+
+        j = j + 1;
+      }
+      camera.position.z = 80;
+
+      //	console.log(scene) ;
+
+    }
+  </script>
+  <div></div>
+  <div id="planetary_orbits"></div>
+  <!-- <i>RAAN = Right Ascension of Ascending Node</i>
  <p id="modelDate">December 9, 2014</p> -->
- <table border='1'><caption>The spheres are animated by an orbital propagator using the following parameters.</caption><tr><th>Name</th><th>Arg.Perigee</th><th>Mean Anomoly</th><th>Eccentricty</th><th>Inclination</th><th>SemiMajor Axis</th><th>RAAN</th><th>Period</th></tr>
- <tr><td id="r1c1"></td><td id="r1c2"></td><td id="r1c3"></td><td id="r1c4"></td><td id="r1c5"></td><td id="r1c6"></td><td id="r1c7"></td><td id="r1c8"></td></tr>
- <tr><td id="r2c1"></td><td id="r2c2"></td><td id="r2c3"></td><td id="r2c4"></td><td id="r2c5"></td><td id="r2c6"></td><td id="r2c7"></td><td id="r2c8"></td></tr>
- <tr><td id="r3c1"></td><td id="r3c2"></td><td id="r3c3"></td><td id="r3c4"></td><td id="r3c5"></td><td id="r3c6"></td><td id="r3c7"></td><td id="r3c8"></td></tr>
- <tr><td id="r4c1"></td><td id="r4c2"></td><td id="r4c3"></td><td id="r4c4"></td><td id="r4c5"></td><td id="r4c6"></td><td id="r4c7"></td><td id="r4c8"></td></tr>
- <tr><td id="r5c1"></td><td id="r5c2"></td><td id="r5c3"></td><td id="r5c4"></td><td id="r5c5"></td><td id="r5c6"></td><td id="r5c7"></td><td id="r5c8"></td></tr> 
- <tr><td id="r6c1"></td><td id="r6c2"></td><td id="r6c3"></td><td id="r6c4"></td><td id="r6c5"></td><td id="r6c6"></td><td id="r6c7"></td><td id="r6c8"></td></tr>
-</table> 
+  <table style="display: none;" border='1'>
+    <caption>The spheres are animated by an orbital propagator using the following parameters.</caption>
+    <tr>
+      <th>Name</th>
+      <th>Arg.Perigee</th>
+      <th>Mean Anomoly</th>
+      <th>Eccentricty</th>
+      <th>Inclination</th>
+      <th>SemiMajor Axis</th>
+      <th>RAAN</th>
+      <th>Period</th>
+    </tr>
+    <tr>
+      <td id="r1c1"></td>
+      <td id="r1c2"></td>
+      <td id="r1c3"></td>
+      <td id="r1c4"></td>
+      <td id="r1c5"></td>
+      <td id="r1c6"></td>
+      <td id="r1c7"></td>
+      <td id="r1c8"></td>
+    </tr>
+    <tr>
+      <td id="r2c1"></td>
+      <td id="r2c2"></td>
+      <td id="r2c3"></td>
+      <td id="r2c4"></td>
+      <td id="r2c5"></td>
+      <td id="r2c6"></td>
+      <td id="r2c7"></td>
+      <td id="r2c8"></td>
+    </tr>
+    <tr>
+      <td id="r3c1"></td>
+      <td id="r3c2"></td>
+      <td id="r3c3"></td>
+      <td id="r3c4"></td>
+      <td id="r3c5"></td>
+      <td id="r3c6"></td>
+      <td id="r3c7"></td>
+      <td id="r3c8"></td>
+    </tr>
+    <tr>
+      <td id="r4c1"></td>
+      <td id="r4c2"></td>
+      <td id="r4c3"></td>
+      <td id="r4c4"></td>
+      <td id="r4c5"></td>
+      <td id="r4c6"></td>
+      <td id="r4c7"></td>
+      <td id="r4c8"></td>
+    </tr>
+    <tr>
+      <td id="r5c1"></td>
+      <td id="r5c2"></td>
+      <td id="r5c3"></td>
+      <td id="r5c4"></td>
+      <td id="r5c5"></td>
+      <td id="r5c6"></td>
+      <td id="r5c7"></td>
+      <td id="r5c8"></td>
+    </tr>
+    <tr>
+      <td id="r6c1"></td>
+      <td id="r6c2"></td>
+      <td id="r6c3"></td>
+      <td id="r6c4"></td>
+      <td id="r6c5"></td>
+      <td id="r6c6"></td>
+      <td id="r6c7"></td>
+      <td id="r6c8"></td>
+    </tr>
+    <tr>
+      <td id="r7c1"></td>
+      <td id="r7c2"></td>
+      <td id="r7c3"></td>
+      <td id="r7c4"></td>
+      <td id="r7c5"></td>
+      <td id="r7c6"></td>
+      <td id="r7c7"></td>
+      <td id="r7c8"></td>
+    </tr>
+    <tr>
+      <td id="r8c1"></td>
+      <td id="r8c2"></td>
+      <td id="r8c3"></td>
+      <td id="r8c4"></td>
+      <td id="r8c5"></td>
+      <td id="r8c6"></td>
+      <td id="r8c7"></td>
+      <td id="r8c8"></td>
+    </tr>
+  </table>
 
-		
-		<script>
-		//-------------------------------------------
- 	 	function render() {
-	           requestAnimationFrame( render );
-	           renderer.render( scene, camera );
-              }  
-   		  function animate() {
-				requestAnimationFrame( animate );
-				controls.update();
-				updatePosition() ;
-			}
 
-     function populate_table(rowNum,name,argP,meanA,ecc,inc,sma,raan,per) {
-	     console.log(rowNum + "  " + name + "," + argP + "," + meanA + "," + ecc);
-		 var cellID = "r" + rowNum + "c1"; console.log(cellID);
-		 cellID = "r" + rowNum + "c1"    ; document.getElementById(cellID).textContent = name;
-         cellID = "r" + rowNum + "c2"    ; document.getElementById(cellID).textContent = argP;
-         cellID = "r" + rowNum + "c3"    ; document.getElementById(cellID).textContent = meanA;
-         cellID = "r" + rowNum + "c4"    ; document.getElementById(cellID).textContent = ecc;
-         cellID = "r" + rowNum + "c5"    ; document.getElementById(cellID).textContent = inc;
-         cellID = "r" + rowNum + "c6"    ; document.getElementById(cellID).textContent = sma;
-         cellID = "r" + rowNum + "c7"    ; document.getElementById(cellID).textContent = raan;
-         cellID = "r" + rowNum + "c8"    ; document.getElementById(cellID).textContent = per;
-	  
-	 }
-	 
-   function get_datablock() {
+  <script>
+    //-------------------------------------------
+    function render() {
+      requestAnimationFrame(render);
+      renderer.render(scene, camera);
+    }
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      updatePosition();
+    }
 
-     // Reference https://stackoverflow.com/questions/38602543/is-there-a-way-to-access-json-ld-via-javascript-if-it-doesnt-have-an-id
-	    // var jsonld = document.querySelectorAll('script[type="application/ld+json"]').innerText;
-		var jsonld = document.querySelector('#OrbitOntology').innerText;
-         var result = JSON.parse(jsonld);
-       // console.log(result.graph[1].name.value);		
-		
-	  //   $.each(result.graph, function(i, field){
-	      for(i = 1; i < result.graph.length; i++) {
-		   field = result.graph[i];
-		   if (i > 0 && i < 7) { // alert(field.name.value) ; 
-		
-		   //smA,oI,aP,oE,aN,mAe,Sidereal
-             celestialBody = new Trajectory(field.name.value,
-		                             field.semiMajorAxis.value,
-									 field.inclination.value,
-									 field.argPerigee.value,
-									 field.eccentricity.value,
-									 field.raan.value,
-									 field.meanAnomoly.value,
-									 field.sidereal.value) ;
-			 
-			 heavenlyBodies.push(celestialBody) ;
-		   	
-			populate_table(i,field.name.value,
-                            field.argPerigee.value, 
-                            field.meanAnomoly.value,
-                            field.eccentricity.value,
-                            field.inclination.value,
-                            field.semiMajorAxis.value,
-                            field.raan.value,
-                            field.sidereal.value) ;
-	
-		   }		 
+    function populate_table(rowNum, name, argP, meanA, ecc, inc, sma, raan, per) {
+      console.log(rowNum + "  " + name + "," + argP + "," + meanA + "," + ecc);
+      var cellID = "r" + rowNum + "c1"; console.log(cellID);
+      cellID = "r" + rowNum + "c1"; document.getElementById(cellID).textContent = name;
+      cellID = "r" + rowNum + "c2"; document.getElementById(cellID).textContent = argP;
+      cellID = "r" + rowNum + "c3"; document.getElementById(cellID).textContent = meanA;
+      cellID = "r" + rowNum + "c4"; document.getElementById(cellID).textContent = ecc;
+      cellID = "r" + rowNum + "c5"; document.getElementById(cellID).textContent = inc;
+      cellID = "r" + rowNum + "c6"; document.getElementById(cellID).textContent = sma;
+      cellID = "r" + rowNum + "c7"; document.getElementById(cellID).textContent = raan;
+      cellID = "r" + rowNum + "c8"; document.getElementById(cellID).textContent = per;
 
-		 }
-}
+    }
 
-//----------------------------------
-            init() ;
-			get_datablock() ;	
-			traceOrbits() ;
-			animate() ;
-		  
-		</script>
-	</body>
+    function get_datablock() {
+
+      // Reference https://stackoverflow.com/questions/38602543/is-there-a-way-to-access-json-ld-via-javascript-if-it-doesnt-have-an-id
+      // var jsonld = document.querySelectorAll('script[type="application/ld+json"]').innerText;
+      var jsonld = document.querySelector('#OrbitOntology').innerText;
+      var result = JSON.parse(jsonld);
+      // console.log(result.graph[1].name.value);		
+
+      //   $.each(result.graph, function(i, field){
+      for (i = 1; i < result.graph.length; i++) {
+        field = result.graph[i];
+        if (i > 0 && i < 9) { // alert(field.name.value) ; 
+
+          //smA,oI,aP,oE,aN,mAe,Sidereal
+          celestialBody = new Trajectory(field.name.value,
+            field.semiMajorAxis.value,
+            field.inclination.value,
+            field.argPerigee.value,
+            field.eccentricity.value,
+            field.raan.value,
+            field.meanAnomoly.value,
+            field.sidereal.value);
+
+          heavenlyBodies.push(celestialBody);
+
+          populate_table(i, field.name.value,
+            field.argPerigee.value,
+            field.meanAnomoly.value,
+            field.eccentricity.value,
+            field.inclination.value,
+            field.semiMajorAxis.value,
+            field.raan.value,
+            field.sidereal.value);
+
+        }
+
+      }
+    }
+
+    //----------------------------------
+    init();
+    get_datablock();
+    traceOrbits();
+    animate();
+
+  </script>
+</body>
+
 </html>

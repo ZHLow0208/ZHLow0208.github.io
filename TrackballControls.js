@@ -53,7 +53,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.staticMoving = false;
 	this.dynamicDampingFactor = 0.2;
 
-	this.minDistance = 0;
+	this.minDistance = 0.1;
 	this.maxDistance = Infinity;
 
 	this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
@@ -89,7 +89,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	// for reset
 
 	this.target0 = this.target.clone();
-	this.position0 = this.object.position.clone();
+	this.position0 = this.object.position.set(0,-135,0);
 	this.up0 = this.object.up.clone();
 
 	// events
@@ -182,7 +182,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			moveDirection.set( _moveCurr.x - _movePrev.x, _moveCurr.y - _movePrev.y, 0 );
 			angle = moveDirection.length();
-
+			
 			if ( angle ) {
 
 				_eye.copy( _this.object.position ).sub( _this.target );
@@ -238,7 +238,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			factor = 1.0 + ( _zoomEnd.y - _zoomStart.y ) * _this.zoomSpeed;
 
-			if ( factor !== 1.0 && factor > 0.0 ) {
+			if ( factor !== 1.0 && factor > 0.01 ) {
 
 				_eye.multiplyScalar( factor );
 
@@ -489,18 +489,23 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	}
 
-	function mousewheel( event ) {
-
-		if ( _this.enabled === false ) return;
-
+	function mousewheel(event) {
+		if (_this.enabled === false) return;
+	
 		event.preventDefault();
 		event.stopPropagation();
-
-		_zoomStart.y -= event.deltaY * 0.01;
-
-		_this.dispatchEvent( startEvent );
-		_this.dispatchEvent( endEvent );
-
+	
+		// Adjust the zoom factor
+		if (event.deltaY < 0) {
+			// Zoom in (bring the camera closer)
+			_zoomStart.y += 0.05; // Increase the factor to zoom in faster if needed
+		} else {
+			// Zoom out (move the camera farther)
+			_zoomStart.y -= 0.05; // Decrease the factor to zoom out slower if needed
+		}
+	
+		_this.dispatchEvent(startEvent);
+		_this.dispatchEvent(endEvent);
 	}
 
 	function touchstart( event ) {
