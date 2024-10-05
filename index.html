@@ -93,7 +93,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Earth_Orbit"
+        "value": "Earth"
       },
       "eccentricity": {
         "type": "decimal",
@@ -132,7 +132,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Mars_Orbit"
+        "value": "Mars"
       },
       "eccentricity": {
         "type": "decimal",
@@ -171,7 +171,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Mercury_Orbit"
+        "value": "Mercury"
       },
       "eccentricity": {
         "type": "decimal",
@@ -210,7 +210,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Venus_Orbit"
+        "value": "Venus"
       },
       "eccentricity": {
         "type": "decimal",
@@ -249,7 +249,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Jupiter_Orbit"
+        "value": "Jupiter"
       },
       "eccentricity": {
         "type": "decimal",
@@ -288,7 +288,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Saturn_Orbit"
+        "value": "Saturn"
       },
       "eccentricity": {
         "type": "decimal",
@@ -327,7 +327,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Uranus_Orbit"
+        "value": "Uranus"
       },
       "eccentricity": {
         "type": "decimal",
@@ -366,7 +366,7 @@
       },
       "name": {
         "type": "Name",
-        "value": "Neptune_Orbit"
+        "value": "Neptune"
       },
       "eccentricity": {
         "type": "decimal",
@@ -397,6 +397,55 @@
   ]
 }
         </script>
+  <script>
+    var camera;
+    var controls;         // Declare global variables
+    var scene;
+    var cube;
+    var sphere;
+    var line;
+    var objNames = ["Earth", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "Uranus", "Neptune"];
+    var objSizes = [0.2, 0.17, 0.07, 0.2, 0.4, 0.38, 0.35, 0.37];
+    var objColors = [0x0066FF, 0xCC3333, 0xFF0000, 0xFFFFFF, 0xc99039, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF];
+    var curObj = new THREE.Object3D();
+    var celestialBody;
+    var heavenlyBodies = [];
+    const labels = [];  // To store the labels for each planet
+
+    function createLabel(name) {
+      const label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = name;
+      label.style.position = 'absolute';
+      label.style.color = '#fff';  // You can style the label as you like
+      document.body.appendChild(label);
+      return label;
+    }
+
+    for (let i = 0; i < objNames.length; i++) {
+      labels.push(createLabel(objNames[i]));
+    }
+    
+    function updateLabels() {
+      labels.forEach((label, index) => {
+        const planet = scene.getObjectByName(objNames[index]);
+        const vector = new THREE.Vector3();
+        vector.copy(planet.position);
+        
+        // Project the planet's position into 2D space
+        vector.project(camera);
+
+        const halfWidth = window.innerWidth / 2;
+        const halfHeight = window.innerHeight / 2;
+
+        const x = (vector.x * halfWidth) + halfWidth;
+        const y = -(vector.y * halfHeight) + halfHeight;
+
+        // Position the label based on the projected position
+        label.style.left = `${x}px`;
+        label.style.top = `${y - 10}px`;  // Adjust for offset above the planet
+      });
+    }
 
     <label for="simSpeed">Simulation Speed: </label>
     <input type="range" id="simSpeed" min="0" max="20" step="1.0" value="1.0" oninput="updateSimSpeed(this.value)">
