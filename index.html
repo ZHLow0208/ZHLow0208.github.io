@@ -1,6 +1,8 @@
 <html>
 
 <head>
+  <script type="module" src="/@vite/client"></script>
+
   <meta charset=utf-8>
   <title>Ontology-driven Orrery</title>
   <style>
@@ -397,59 +399,13 @@
   ]
 }
         </script>
-  <script>
-    var camera;
-    var controls;         // Declare global variables
-    var scene;
-    var cube;
-    var sphere;
-    var line;
-    var objNames = ["Earth", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "Uranus", "Neptune"];
-    var objSizes = [0.2, 0.17, 0.07, 0.2, 0.4, 0.38, 0.35, 0.37];
-    var objColors = [0x0066FF, 0xCC3333, 0xFF0000, 0xFFFFFF, 0xc99039, 0xFFFFFF, 0xFFFFFF, 0xFFFFFF];
-    var curObj = new THREE.Object3D();
-    var celestialBody;
-    var heavenlyBodies = [];
-    const labels = [];  // To store the labels for each planet
-
-    function createLabel(name) {
-      const label = document.createElement('div');
-      label.className = 'label';
-      label.textContent = name;
-      label.style.position = 'absolute';
-      label.style.color = '#fff';  // You can style the label as you like
-      document.body.appendChild(label);
-      return label;
-    }
-
-    for (let i = 0; i < objNames.length; i++) {
-      labels.push(createLabel(objNames[i]));
-    }
-    
-    function updateLabels() {
-      labels.forEach((label, index) => {
-        const planet = scene.getObjectByName(objNames[index]);
-        const vector = new THREE.Vector3();
-        vector.copy(planet.position);
-        
-        // Project the planet's position into 2D space
-        vector.project(camera);
-
-        const halfWidth = window.innerWidth / 2;
-        const halfHeight = window.innerHeight / 2;
-
-        const x = (vector.x * halfWidth) + halfWidth;
-        const y = -(vector.y * halfHeight) + halfHeight;
-
-        // Position the label based on the projected position
-        label.style.left = `${x}px`;
-        label.style.top = `${y - 10}px`;  // Adjust for offset above the planet
-      });
-    }
 
     <label for="simSpeed">Simulation Speed: </label>
     <input type="range" id="simSpeed" min="0" max="20" step="1.0" value="1.0" oninput="updateSimSpeed(this.value)">
     <span id="speedValue">1.0</span>
+    <label for="toggleLabels" style="margin-left: 40px;">Show Planet Names: </label>
+    <input type="checkbox" id="toggleLabels" checked onchange="toggleLabelsVisibility(this.checked)">
+    
 
     <script>
       var camera;
@@ -458,13 +414,19 @@
       var cube;
       var sphere;
       var line;
-      var objNames = ["Earth_Orbit", "Mars_Orbit", "Mercury_Orbit", "Venus_Orbit", "Jupiter_Orbit", "Saturn_Orbit", "Uranus_Orbit", "Neptune_Orbit"];
+      var objNames = ["Earth", "Mars", "Mercury", "Venus", "Jupiter", "Saturn", "Uranus", "Neptune"];
       var objSizes = [0.1, 0.053, 0.038, 0.095, 0.5, 0.433, 0.268, 0.267];
       var objTexture = ['earth.jpg', 'mars.jpg', 'mercury.jpg', 'venus.jpg', 'jupiter.jpeg', 'saturn.jpg', 'uranus.jpg', 'neptune.jpeg'];
       var curObj = new THREE.Object3D();
       var celestialBody;
       var heavenlyBodies = [];
       const labels = [];  // To store the labels for each planet
+
+      function toggleLabelsVisibility(visible) {
+        labels.forEach(label => {
+          label.style.display = visible ? 'block' : 'none';
+        });
+      }
 
       function createLabel(name) {
         const label = document.createElement('div');
@@ -503,7 +465,6 @@
 
       function init() {
         camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000);
-
         controls = new THREE.TrackballControls(camera);
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -514,14 +475,24 @@
         controls.dynamicDampingFactor = 0.3;
         controls.keys = [65, 83, 68];
         controls.addEventListener('change', render);
-
         scene = new THREE.Scene();
-
-        renderer = new THREE.WebGLRenderer();
+        renderer = new THREE.WebGLRenderer({antialias: true});
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
         document.body.appendChild(renderer.domElement);
 
+        const loader = new THREE.TextureLoader();
+        loader.load('bgs.jpeg', function (texture) {
+          // Set the scene background to the loaded texture
+          scene.background = texture;
+        }, undefined, function (err) {
+          console.error('An error occurred loading the background texture.');
+        });
 
+        // Your existing code for creating the Sun and planets goes here...
+
+        render();
         var j = 0;
         //  Here comes the Sun!
         var geometry = new THREE.SphereGeometry(0.6, 16, 16);
