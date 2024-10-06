@@ -405,7 +405,6 @@
     <span id="speedValue">1.0</span>
     <label for="toggleLabels" style="margin-left: 40px;">Show Planet Names: </label>
     <input type="checkbox" id="toggleLabels" checked onchange="toggleLabelsVisibility(this.checked)">
-    
 
     <script>
       var camera;
@@ -483,14 +482,12 @@
         document.body.appendChild(renderer.domElement);
 
         const loader = new THREE.TextureLoader();
-        loader.load('bgs.jpg', function (texture) {
+        loader.load('space.png', function (texture) {
           // Set the scene background to the loaded texture
           scene.background = texture;
         }, undefined, function (err) {
           console.error('An error occurred loading the background texture.');
         });
-
-        // Your existing code for creating the Sun and planets goes here...
 
         render();
         var j = 0;
