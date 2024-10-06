@@ -33,7 +33,7 @@
 
 <body>
   
-  <div>
+  <div style="background-color:black;">
     
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jsonld/0.3.15/jsonld.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.js"></script>
@@ -401,13 +401,14 @@
   ]
 }
         </script>
+
     <a href="index2.html">
       <button style="background-color:blue;color:white;"> Orbiting </button>
     </a>
-    <label for="simSpeed">Simulation Speed: </label>
+    <label for="simSpeed" style="color:white;">Simulation Speed: </label>
     <input type="range" id="simSpeed" min="0" max="20" step="1.0" value="1.0" oninput="updateSimSpeed(this.value)">
-    <span id="speedValue">1.0</span>
-    <label for="toggleLabels" style="margin-left: 40px;">Show Planet Names: </label>
+    <span id="speedValue" style="color:white;" >1.0</span>
+    <label for="toggleLabels" style="margin-left: 40px;" style="color:white;" >Show Planet Names: </label>
     <input type="checkbox" id="toggleLabels" checked onchange="toggleLabelsVisibility(this.checked)">
 
     <script>
